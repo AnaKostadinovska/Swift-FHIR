@@ -200,9 +200,16 @@ public extension Resource {
 			return
 		}
 		
+        var postPath:String!
+        if type(of: self).resourceType == "Bundle" {
+            postPath = server.baseURL.absoluteString
+        } else {
+            postPath = relativeURLBase()
+        }
+        
 		let headers = FHIRRequestHeaders([.prefer: "return=representation"])
 		handler.add(headers: headers)
-		server.performRequest(against: relativeURLBase(), handler: handler) { response in
+		server.performRequest(against: postPath, handler: handler) { response in
 			if nil == response.error {
 				self._server = server
 				do {
